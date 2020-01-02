@@ -1,0 +1,46 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: ship
+  labels:
+    access-ship-db: "1"
+spec:
+  template:
+    metadata:
+      labels:
+        access-ship-db: "1"
+    spec:
+      containers:
+        - image: eu.gcr.io/mhaddon/ship:v1
+          env:
+           - name: MONGO_USERNAME
+             valueFrom:
+             secretKeyRef:
+               name: ship-db-credentials
+               key: username
+           - name: MONGO_PASSWORD
+             valueFrom:
+               secretKeyRef:
+                 name: ship-db-credentials
+                 key: password
+           - name: MONGO_COLLECTION
+             valueFrom:
+               secretKeyRef:
+                 name: ship-db-credentials
+                 key: collection
+           - name: MONGO_DB
+             valueFrom:
+               secretKeyRef:
+                 name: ship-db-credentials
+                 key: database
+           - name: MONGO_DOMAIN
+             value: 'ship-db.default.svc.cluster.local'
+           - name: MONGO_PORT
+             value: '27017'
+          resources:
+            limits:
+              cpu: "100m"
+              memory: 256Mi
+            requests:
+              cpu: "50m"
+              memory: 64Mi

@@ -1,0 +1,15 @@
+apiVersion: eventing.knative.dev/v1alpha1
+kind: Trigger
+metadata:
+  name: ship-notification-connector-trigger
+spec:
+  broker: default
+  filter:
+    attributes:
+      type: com.google.cloud.pubsub.topic.publish
+      source: //pubsub.googleapis.com/projects/mhaddon/topics/normalised
+  subscriber:
+    ref:
+      apiVersion: serving.knative.dev/v1
+      kind: Service
+      name: ship-notification-connector

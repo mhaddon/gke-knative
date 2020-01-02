@@ -1,0 +1,20 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: normaliser
+spec:
+  template:
+    spec:
+      containers:
+        - image: eu.gcr.io/mhaddon/normaliser:v17
+          ports:
+          - containerPort: 8080
+            name: cloudevent
+            protocol: TCP
+          resources:
+            limits:
+              cpu: "100m"
+              memory: 256Mi
+            requests:
+              cpu: "50m"
+              memory: 64Mi

@@ -1,6 +1,7 @@
 package normaliser
 
 import (
+	"encoding/json"
 	"github.com/tkanos/gonfig"
 	"log"
 	"os"
@@ -8,28 +9,36 @@ import (
 )
 
 type configuration struct {
-	Egress     *egress
-	HTTP       *httpConfig
-	CloudEvent *cloudEventConfig
+	Egress     *egress `json:"egress"`
+	HTTP       *httpConfig `json:"http"`
+	CloudEvent *cloudEventConfig `json:"cloudevent"`
 }
 
 type egress struct {
-	Source string `env:"Source"`
-	Type   string `env:"Type"`
+	Source string `env:"EGRESS_SOURCE" json:"source"`
+	Type   string `env:"EGRESS_TYPE" json:"type"`
 }
 
 type httpConfig struct {
-	Port int `env:"HTTP_PORT"`
+	Port int `env:"HTTP_PORT" json:"port"`
 }
 
 type cloudEventConfig struct {
-	Port int `env:"HTTP_PORT"`
+	Port int `env:"CLOUDEVENT_PORT" json:"port"`
 }
 
 var (
 	configInstance *configuration
 	configOnce     sync.Once
 )
+
+func (c *configuration) convertToJson() string {
+	b, err := json.Marshal(c); if err != nil {
+		log.Printf("[Normaliser][Config] Failed to stringify configuration: %v", err)
+	}
+
+	return string(b)
+}
 
 func getConfig() *configuration {
 	configOnce.Do(func() {
@@ -38,6 +47,8 @@ func getConfig() *configuration {
 			HTTP:       createHTTPConfig(),
 			CloudEvent: createCloudEventConfig(),
 		}
+
+		log.Printf("[Normaliser][Config] Loaded config with variables: %v", configInstance.convertToJson())
 	})
 	return configInstance
 }

@@ -1,0 +1,17 @@
+apiVersion: pubsub.cloud.google.com/v1alpha1
+kind: Topic
+metadata:
+  name: ingress-topic
+spec:
+  topic: ingress
+  propagationPolicy: CreateDelete
+
+---
+
+apiVersion: pubsub.cloud.google.com/v1alpha1
+kind: Topic
+metadata:
+  name: normalised-topic
+spec:
+  topic: normalised
+  propagationPolicy: CreateDelete

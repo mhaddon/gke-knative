@@ -1,5 +1,9 @@
 package models
 
+import (
+	"encoding/json"
+)
+
 type ShipNotificationRegistration struct {
 	ID      string `json:"id" bson:"id"`
 	Name    string `json:"name" bson:"name"`
@@ -19,4 +23,12 @@ type ShipNotificationStatus struct {
 type ShipNotification struct {
 	Registration ShipNotificationRegistration `json:"registration" bson:"registration"`
 	Status       ShipNotificationStatus       `json:"status" bson:"status"`
+}
+
+func (c *ShipNotification) ConvertToJson() (string, error) {
+	b, err := json.Marshal(c); if err != nil {
+		return "[]", err
+	}
+
+	return string(b), nil
 }
