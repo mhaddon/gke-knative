@@ -1,12 +1,12 @@
 package normaliser
 
 import (
-	models "github.com/mhaddon/gke-knative/services/common/src/models"
 	"context"
 	cloudevents "github.com/cloudevents/sdk-go"
 	"github.com/cloudevents/sdk-go/pkg/cloudevents/datacodec"
 	"github.com/cloudevents/sdk-go/pkg/cloudevents/datacodec/json"
 	"github.com/google/uuid"
+	"github.com/mhaddon/gke-knative/services/common/src/models"
 	"log"
 )
 

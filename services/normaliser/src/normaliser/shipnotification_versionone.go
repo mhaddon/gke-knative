@@ -1,9 +1,9 @@
 package normaliser
 
 import (
-	models "github.com/mhaddon/gke-knative/services/common/src/models"
 	"errors"
 	cloudevents "github.com/cloudevents/sdk-go"
+	"github.com/mhaddon/gke-knative/services/common/src/models"
 	"log"
 	"strconv"
 	"strings"

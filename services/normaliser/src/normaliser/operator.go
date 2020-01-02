@@ -1,8 +1,8 @@
 package normaliser
 
 import (
-	models "github.com/mhaddon/gke-knative/services/common/src/models"
 	cloudevents "github.com/cloudevents/sdk-go"
+	"github.com/mhaddon/gke-knative/services/common/src/models"
 )
 
 type operator interface {
