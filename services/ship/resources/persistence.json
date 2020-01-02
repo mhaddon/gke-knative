@@ -1,8 +1,7 @@
 {
-  "Domain": "127.0.0.1",
-  "Port": 27017,
-  "Username": "root",
-  "Password": "example",
-  "DB":  "ship",
-  "Collection": "app"
+  "domain": "127.0.0.1",
+  "port": 27017,
+  "username": "root",
+  "db":  "ship",
+  "collection": "app"
 }
