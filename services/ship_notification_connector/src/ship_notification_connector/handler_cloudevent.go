@@ -71,7 +71,7 @@ func publishNotification(notification *models.ShipNotification) error {
 		return err
 	}
 
-	request.ContentLength = len(stringifiedNotification)
+	request.ContentLength = int64(len(stringifiedNotification))
 
 	response, err := client.Do(request); if err != nil {
 		log.Printf("[ShipNotificationConnector][CloudEvent][Publish] Error sending HTTP request: %v\n", err)

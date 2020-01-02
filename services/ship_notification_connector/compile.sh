@@ -4,10 +4,8 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 go get \
  gopkg.in/mgo.v2 \
- github.com/google/uuid \
- github.com/pkg/errors \
+ github.com/cloudevents/sdk-go \
  github.com/tkanos/gonfig \
- github.com/gorilla/mux \
  github.com/mhaddon/gke-knative/services/common/src/models
 
 mkdir -p "${DIR}/bin/"
