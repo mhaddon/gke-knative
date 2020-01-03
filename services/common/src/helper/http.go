@@ -19,7 +19,7 @@ func LogQuery(callback func(w http.ResponseWriter, r *http.Request) error, logPr
 
 		durationNanoseconds := time.Now().UnixNano() - startNanoSeconds
 
-		log.Printf("%v[HTTP] %v Request for: %v, from: %v, with size: %v took %v nanoseconds", logPrefix, r.Method, r.RequestURI, r.RemoteAddr, r.ContentLength, durationNanoseconds)
+		log.Printf("%v[HTTP] %v Request for: %v, from: %v, with size: %v took %v nanoseconds or %v milliseconds", logPrefix, r.Method, r.RequestURI, r.RemoteAddr, r.ContentLength, durationNanoseconds, durationNanoseconds / int64(time.Millisecond))
 	}
 }
 

@@ -6,7 +6,7 @@ spec:
   template:
     spec:
       containers:
-        - image: eu.gcr.io/mhaddon/normaliser:v17
+        - image: eu.gcr.io/mhaddon/normaliser:v19
           ports:
           - containerPort: 8080
           resources:

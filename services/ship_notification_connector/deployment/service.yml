@@ -6,10 +6,10 @@ spec:
   template:
     spec:
       containers:
-        - image: eu.gcr.io/mhaddon/ship-notification-connector:v1
+        - image: eu.gcr.io/mhaddon/ship-notification-connector:v4
           env:
            - name: SHIP_DOMAIN
-             value: 'http://ship.default.svc.cluster.local' #todo change to knative serving domain
+             value: 'http://ship.default.svc.cluster.local'
           resources:
             limits:
               cpu: "100m"

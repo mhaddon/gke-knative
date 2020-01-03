@@ -9,7 +9,7 @@ import (
 )
 
 type configuration struct {
-	Services   *servicesConfig
+	Services   *servicesConfig `json:"services"`
 	CloudEvent *cloudEventConfig `json:"cloudevent"`
 }
 
@@ -47,10 +47,13 @@ func getConfig() *configuration {
 }
 
 func processFile(path string, data interface{}) error {
-	if _, err := os.Stat(path); !os.IsNotExist(err) {
-		if err := gonfig.GetConf(path, data); err != nil {
-			return err
-		}
+	if _, err := os.Stat(path); err != nil {
+		log.Printf("[ShipNoitifcationConnector][Config] File does not exist %v: %v", path, err)
+		return err
+	}
+
+	if err := gonfig.GetConf(path, data); err != nil {
+		return err
 	}
 
 	return nil
@@ -59,7 +62,7 @@ func processFile(path string, data interface{}) error {
 func createServicesConfig() *servicesConfig {
 	servicesConfig := &servicesConfig{}
 
-	if err := processFile("resources/persistence.json", servicesConfig); err != nil {
+	if err := processFile("resources/services.json", servicesConfig); err != nil {
 		log.Printf("[ShipNoitifcationConnector][Config] Failed to read services config file: %v", err)
 	}
 
