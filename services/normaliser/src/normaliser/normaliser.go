@@ -48,6 +48,11 @@ func getVersion(event cloudevents.Event) (int, error) {
 		return 0, err
 	}
 
+	if metadata.StandardVersion == 0 {
+		log.Printf("[Normaliser][getVersion] Version is 0 or undefined, this is a required field")
+		return 0, errors.New("invalid version")
+	}
+
 	return metadata.StandardVersion, nil
 }
 
