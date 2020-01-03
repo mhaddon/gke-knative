@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/mhaddon/gke-knative/services/common/src/helper"
 	"github.com/mhaddon/gke-knative/services/common/src/models"
+	"io/ioutil"
 	"log"
 	"net/http"
 )
@@ -36,6 +37,11 @@ func addNotification(w http.ResponseWriter, r *http.Request) error {
 		log.Printf("[Ship][DAO] Error deserialising body... %v", err)
 		return err
 	}
+
+	buf, _ := ioutil.ReadAll(r.Body)
+
+	log.Printf("http contents: %v", string(buf))
+	log.Printf("notification deserialised: %v", shipNotification)
 
 	if err := getCollection().Insert(&shipNotification); err != nil {
 		_ = helper.PrintErrorMessage(w, 400, "Failed to save data")

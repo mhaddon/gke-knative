@@ -50,11 +50,15 @@ func publishNormalisedMessage(shipNotification models.ShipNotification, response
 	newEvent.SetDataContentType(*cloudevents.StringOfApplicationJSON())
 	response.RespondWith(200, &newEvent)
 
+	log.Printf("newEvent: %v", newEvent)
+
 	return nil
 }
 
 func cloudWatchHandler(ctx context.Context, event cloudevents.Event, response *cloudevents.EventResponse) error {
 	log.Printf("[Normaliser][CloudEvent][Handler] Recieved Event with ID: %v, Source: %v, Subject: %v, Type: %v, Time: %v", event.Context.GetID(), event.Context.GetSource(), event.Context.GetSubject(), event.Context.GetType(), event.Context.GetTime())
+
+	log.Printf("event: %v", event)
 
 	normalisedShipNotification, err := normaliseEvent(event); if err != nil {
 		log.Printf("[Normaliser][CloudEvent][Handler] Error normalising event: %s, ID: %v\n", err.Error(), event.Context.GetID())

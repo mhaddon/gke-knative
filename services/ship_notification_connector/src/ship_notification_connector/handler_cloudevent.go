@@ -7,6 +7,7 @@ import (
 	"github.com/cloudevents/sdk-go/pkg/cloudevents/datacodec"
 	"github.com/cloudevents/sdk-go/pkg/cloudevents/datacodec/json"
 	"github.com/mhaddon/gke-knative/services/common/src/models"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
@@ -43,6 +44,8 @@ func configureCodec() {
 func cloudWatchHandler(ctx context.Context, event cloudevents.Event, response *cloudevents.EventResponse) error {
 	log.Printf("[ShipNotificationConnector][CloudEvent][Handler] Recieved Event with ID: %v, Source: %v, Subject: %v, Type: %v, Time: %v", event.Context.GetID(), event.Context.GetSource(), event.Context.GetSubject(), event.Context.GetType(), event.Context.GetTime())
 
+
+	log.Printf("event: %v", event)
 	shipNotification := &models.ShipNotification{}
 
 	if err := event.DataAs(shipNotification); err != nil {
@@ -50,6 +53,7 @@ func cloudWatchHandler(ctx context.Context, event cloudevents.Event, response *c
 		return err
 	}
 
+	log.Printf("notification: %v", shipNotification)
 	if err := publishNotification(shipNotification); err != nil {
 		log.Printf("[ShipNotificationConnector][CloudEvent][Handler] Error publishing notification: %s, ID: %v\n", err.Error(), event.Context.GetID())
 		return err
@@ -72,6 +76,9 @@ func publishNotification(notification *models.ShipNotification) error {
 	}
 
 	request.ContentLength = int64(len(stringifiedNotification))
+
+	buf, _ := ioutil.ReadAll(request.Body)
+	log.Printf("http contents: %v", string(buf))
 
 	response, err := client.Do(request); if err != nil {
 		log.Printf("[ShipNotificationConnector][CloudEvent][Publish] Error sending HTTP request: %v\n", err)

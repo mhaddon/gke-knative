@@ -2,6 +2,7 @@ package models
 
 import (
 	"encoding/json"
+	cloudevents "github.com/cloudevents/sdk-go"
 )
 
 type ShipNotificationRegistration struct {
@@ -31,4 +32,14 @@ func (c *ShipNotification) ConvertToJson() (string, error) {
 	}
 
 	return string(b), nil
+}
+
+func NewShipNotification(event cloudevents.Event) (*ShipNotification, error) {
+	shipNotification := &ShipNotification{}
+
+	if err := event.DataAs(shipNotification); err != nil {
+		return nil, err
+	}
+
+	return shipNotification, nil
 }

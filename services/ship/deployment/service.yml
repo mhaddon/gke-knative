@@ -11,7 +11,7 @@ spec:
         access-ship-db: "1"
     spec:
       containers:
-        - image: eu.gcr.io/mhaddon/ship:v6
+        - image: eu.gcr.io/mhaddon/ship:v8
           env:
            - name: MONGO_USERNAME
              valueFrom:

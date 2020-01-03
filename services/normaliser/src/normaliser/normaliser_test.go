@@ -47,12 +47,12 @@ func TestVersionOneConvert(t *testing.T) {
 		t.Error("Error initialising test")
 	}
 
-	notifications, err := normaliseEvent(newEvent); if err != nil {
+	notification, err := normaliseEvent(newEvent); if err != nil {
 		t.Error("Error normalising event")
 	}
 
 	// todo - more extensive testing
-	if notifications.Registration.Name != "Golden Sausage" {
+	if notification.Registration.Name != "Golden Sausage" {
 		t.Error("Failed to convert name")
 	}
 }
@@ -66,12 +66,12 @@ func TestVersionTwoConvert(t *testing.T) {
 		t.Error("Error initialising test")
 	}
 
-	notifications, err := normaliseEvent(newEvent); if err != nil {
+	notification, err := normaliseEvent(newEvent); if err != nil {
 		t.Error("Error normalising event")
 	}
 
 	// todo - more extensive testing
-	if notifications.Registration.Name != "Golden Sausage" {
+	if notification.Registration.Name != "Golden Sausage" {
 		t.Error("Failed to convert name")
 	}
 }
