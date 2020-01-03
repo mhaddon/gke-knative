@@ -3,6 +3,7 @@ package normaliser
 import (
 	"fmt"
 	"github.com/gorilla/mux"
+	"github.com/mhaddon/gke-knative/services/common/src/helper"
 	"log"
 	"net/http"
 )
@@ -17,20 +18,8 @@ func CreateHTTPListener() error {
 func createRouter() *mux.Router {
 	router := mux.NewRouter()
 
-	router.HandleFunc("/health", alwaysHealthy).Methods("GET")
-	router.HandleFunc("/alive", alwaysHealthy).Methods("GET")
+	router.HandleFunc("/health", helper.LogQuery(helper.AlwaysHealthy, "[Normaliser]")).Methods("GET")
+	router.HandleFunc("/alive", helper.LogQuery(helper.AlwaysHealthy, "[Normaliser]")).Methods("GET")
 
 	return router
-}
-
-func alwaysHealthy(w http.ResponseWriter, r *http.Request) {
-	printMessage(w, 200, []byte("1"))
-}
-
-func printMessage(w http.ResponseWriter, responseCode int, response []byte) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(responseCode)
-	if _, err := w.Write(response); err != nil {
-		log.Fatalf("[Normaliser][HTTP] Error creating response: %v", err)
-	}
 }

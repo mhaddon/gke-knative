@@ -5,13 +5,12 @@ import (
 	"github.com/tkanos/gonfig"
 	"log"
 	"os"
-	"reflect"
 	"sync"
 )
 
 type configuration struct {
-	Mongo *mongoConfig `json:"mongo" file:"resources/persistence.json"`
-	HTTP  *httpConfig `json:"http" file:"resources/http.json"`
+	Mongo *mongoConfig `json:"mongo"`
+	HTTP  *httpConfig `json:"http"`
 }
 
 type mongoConfig struct {
@@ -32,32 +31,6 @@ var (
 	configOnce     sync.Once
 )
 
-func test() *configuration {
-	config := configuration{}
-
-	t := reflect.TypeOf(config)
-
-	for i := 0; i < t.NumField(); i++ {
-		field := t.Field(i)
-		tag := field.Tag.Get("file")
-
-		// Skip if tag is not defined or ignored
-		if tag == "" || tag == "-" {
-			continue
-		}
-
-		instance := reflect.New(reflect.TypeOf(field.Type))
-
-		if err := processFile(tag, instance); err != nil {
-			log.Printf("[Config] Failed to read %v config file at: %v, error: %v", field.Name, tag, err)
-		}
-
-		reflect.ValueOf(config).Elem().FieldByName(field.Name).Set(instance)
-	}
-
-	return &config
-}
-
 func (c *configuration) convertToJson() string {
 	b, err := json.Marshal(c); if err != nil {
 		log.Printf("[Ship][Config] Failed to stringify configuration: %v", err)
@@ -68,7 +41,10 @@ func (c *configuration) convertToJson() string {
 
 func getConfig() *configuration {
 	configOnce.Do(func() {
-		configInstance = test()
+		configInstance = &configuration{
+			Mongo: createMongoConfig(),
+			HTTP:  createHTTPConfig(),
+		}
 
 		log.Printf("[Ship][Config] Loaded config with variables: %v", configInstance.convertToJson())
 	})
@@ -83,4 +59,24 @@ func processFile(path string, data interface{}) error {
 	}
 
 	return nil
+}
+
+func createMongoConfig() *mongoConfig {
+	mongoConfig := &mongoConfig{}
+
+	if err := processFile("resources/persistence.json", mongoConfig); err != nil {
+		log.Printf("[Ship][Config] Failed to read mongo config file: %v", err)
+	}
+
+	return mongoConfig
+}
+
+func createHTTPConfig() *httpConfig {
+	http := &httpConfig{}
+
+	if err := processFile("resources/http.json", http); err != nil {
+		log.Printf("[Ship][Config] Failed to read http config file: %v", err)
+	}
+
+	return http
 }
