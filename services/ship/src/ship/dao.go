@@ -3,64 +3,53 @@ package ship
 import (
 	"encoding/json"
 	"github.com/mhaddon/gke-knative/services/common/src/models"
+	"github.com/mhaddon/gke-knative/services/common/src/helper"
 	"log"
 	"net/http"
 )
 
-func getNotifications(w http.ResponseWriter, r *http.Request) {
+func getNotifications(w http.ResponseWriter, r *http.Request) error {
 	result := make([]models.ShipNotification, 0, 25)
 
 	if err := getCollection().Find(nil).All(&result); err != nil {
-		printErrorMessage(w, 500, "Could not process request")
+		_ = helper.PrintErrorMessage(w, 500, "Could not process request")
 		log.Printf("[Ship][DAO] Error getting ship notifications... %v", err)
-		return
+		return err
 	}
 
 	data, err := json.Marshal(&result)
 
 	if err != nil {
-		printErrorMessage(w, 500,"Could not process response")
+		_ = helper.PrintErrorMessage(w, 500,"Could not process response")
 		log.Print(err)
-		return
+		return err
 	}
 
-	printMessage(w, 200, data)
+	return helper.PrintMessage(w, 200, data)
 }
 
-func addNotification(w http.ResponseWriter, r *http.Request) {
+func addNotification(w http.ResponseWriter, r *http.Request) error {
 	shipNotification := models.ShipNotification{}
 
 	if err := json.NewDecoder(r.Body).Decode(&shipNotification); err != nil {
-		printErrorMessage(w, 400, "Invalid input body")
+		_ = helper.PrintErrorMessage(w, 400, "Invalid input body")
 		log.Printf("[Ship][DAO] Error deserialising body... %v", err)
-		return
+		return err
 	}
 
 	if err := getCollection().Insert(&shipNotification); err != nil {
-		printErrorMessage(w, 400, "Failed to save data")
+		_ = helper.PrintErrorMessage(w, 400, "Failed to save data")
 		log.Printf("[Ship][DAO] Error saving ship notification... %v", err)
-		return
+		return err
 	}
 
 	data, err := json.Marshal(&shipNotification); if err != nil {
-		printErrorMessage(w, 500,"Could not process response")
+		_ = helper.PrintErrorMessage(w, 500,"Could not process response")
 		log.Printf("[Ship][DAO] Error serialising ship notification response... %v", err)
-		return
+		return err
 	}
 
-	printMessage(w, 200, data)
+	return helper.PrintMessage(w, 200, data)
 }
 
-func printErrorMessage(w http.ResponseWriter, responseCode int, response string) {
-	message := map[string]interface{}{ "err": response, "code": responseCode }
-	encodedMessage, _ := json.Marshal(message)
-	printMessage(w, responseCode, encodedMessage)
-}
 
-func printMessage(w http.ResponseWriter, responseCode int, response []byte) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(responseCode)
-	if _, err := w.Write(response); err != nil {
-		log.Fatalf("[Ship][HTTP] Error creating response: %v", err)
-	}
-}

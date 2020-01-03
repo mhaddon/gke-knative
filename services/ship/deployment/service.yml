@@ -11,13 +11,13 @@ spec:
         access-ship-db: "1"
     spec:
       containers:
-        - image: eu.gcr.io/mhaddon/ship:v1
+        - image: eu.gcr.io/mhaddon/ship:v4
           env:
            - name: MONGO_USERNAME
              valueFrom:
-             secretKeyRef:
-               name: ship-db-credentials
-               key: username
+               secretKeyRef:
+                 name: ship-db-credentials
+                 key: username
            - name: MONGO_PASSWORD
              valueFrom:
                secretKeyRef:

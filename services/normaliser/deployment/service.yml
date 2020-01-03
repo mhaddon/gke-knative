@@ -9,8 +9,6 @@ spec:
         - image: eu.gcr.io/mhaddon/normaliser:v17
           ports:
           - containerPort: 8080
-            name: cloudevent
-            protocol: TCP
           resources:
             limits:
               cpu: "100m"

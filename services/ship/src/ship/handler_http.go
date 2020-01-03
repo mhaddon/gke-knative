@@ -3,6 +3,7 @@ package ship
 import (
 	"fmt"
 	"github.com/gorilla/mux"
+	"github.com/mhaddon/gke-knative/services/common/src/helper"
 	"log"
 	"net/http"
 )
@@ -17,15 +18,11 @@ func CreateHTTPListener() error {
 func createRouter() *mux.Router {
 	router := mux.NewRouter()
 
-	router.HandleFunc("/health", alwaysHealthy).Methods("GET")
-	router.HandleFunc("/alive", alwaysHealthy).Methods("GET")
+	router.HandleFunc("/health", helper.LogQuery(helper.AlwaysHealthy, "[Ship]")).Methods("GET")
+	router.HandleFunc("/alive", helper.LogQuery(helper.AlwaysHealthy, "[Ship]")).Methods("GET")
 
-	router.HandleFunc("/notifications", addNotification).Methods("PUT")
-	router.HandleFunc("/notifications", getNotifications).Methods("GET")
+	router.HandleFunc("/notifications", helper.LogQuery(addNotification, "[Ship]")).Methods("PUT")
+	router.HandleFunc("/notifications", helper.LogQuery(getNotifications, "[Ship]")).Methods("GET")
 
 	return router
-}
-
-func alwaysHealthy(w http.ResponseWriter, r *http.Request) {
-	printMessage(w, 200, []byte("1"))
 }
