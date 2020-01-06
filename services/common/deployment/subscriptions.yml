@@ -4,6 +4,7 @@ metadata:
   name: ingress-source
 spec:
   topic: ingress
+#  mode: PushCompatible
   sink:
     ref:
       apiVersion: eventing.knative.dev/v1alpha1
@@ -12,14 +13,16 @@ spec:
 
 ---
 
-apiVersion: events.cloud.google.com/v1alpha1
+apiVersion: pubsub.cloud.google.com/v1alpha1
 kind: PullSubscription
 metadata:
   name: normalised-source
 spec:
   topic: normalised
+#  mode: PushCompatible
   sink:
     ref:
       apiVersion: eventing.knative.dev/v1alpha1
       kind: Broker
       name: default
+

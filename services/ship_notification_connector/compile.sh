@@ -6,7 +6,8 @@ go get \
  gopkg.in/mgo.v2 \
  github.com/cloudevents/sdk-go \
  github.com/tkanos/gonfig \
- github.com/mhaddon/gke-knative/services/common/src/models
+ github.com/mhaddon/gke-knative/services/common/src/models \
+ github.com/mhaddon/gke-knative/services/common/src/helper
 
 mkdir -p "${DIR}/bin/"
 

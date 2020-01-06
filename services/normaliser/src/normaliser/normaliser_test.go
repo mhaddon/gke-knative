@@ -2,7 +2,7 @@ package normaliser
 
 import (
 	"fmt"
-	"github.com/cloudevents/sdk-go"
+	cloudevents "github.com/cloudevents/sdk-go"
 	"testing"
 )
 

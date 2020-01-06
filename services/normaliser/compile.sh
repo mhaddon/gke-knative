@@ -8,7 +8,8 @@ go get \
  github.com/pkg/errors \
  github.com/tkanos/gonfig \
  github.com/gorilla/mux \
- github.com/mhaddon/gke-knative/services/common/src/models
+ github.com/mhaddon/gke-knative/services/common/src/models \
+ github.com/mhaddon/gke-knative/services/common/src/helper
 
 mkdir -p "${DIR}/bin/"
 

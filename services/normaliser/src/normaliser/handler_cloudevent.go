@@ -7,6 +7,7 @@ import (
 	"github.com/cloudevents/sdk-go/pkg/cloudevents/datacodec/json"
 	"github.com/google/uuid"
 	"github.com/mhaddon/gke-knative/services/common/src/models"
+	"github.com/mhaddon/gke-knative/services/common/src/helper"
 	"log"
 )
 
@@ -43,14 +44,19 @@ func publishNormalisedMessage(shipNotification models.ShipNotification, response
 	newEvent.SetID(uuid.New().String())
 	newEvent.SetSource(getConfig().Egress.Source)
 	newEvent.SetType(getConfig().Egress.Type)
-	if err := newEvent.SetData(shipNotification); err != nil {
+
+	jsonShipNotification, err := shipNotification.ConvertToJson(); if err != nil {
 		log.Printf("[Normaliser][CloudEvent][publishNormalisedMessage] Error serialising response: %s\n", err.Error())
 		return err
 	}
+
+	if err := newEvent.SetData(jsonShipNotification); err != nil {
+		log.Printf("[Normaliser][CloudEvent][publishNormalisedMessage] Error packaging response: %s\n", err.Error())
+		return err
+	}
+
 	newEvent.SetDataContentType(*cloudevents.StringOfApplicationJSON())
 	response.RespondWith(200, &newEvent)
-
-	log.Printf("newEvent: %v", newEvent)
 
 	return nil
 }
@@ -58,9 +64,12 @@ func publishNormalisedMessage(shipNotification models.ShipNotification, response
 func cloudWatchHandler(ctx context.Context, event cloudevents.Event, response *cloudevents.EventResponse) error {
 	log.Printf("[Normaliser][CloudEvent][Handler] Recieved Event with ID: %v, Source: %v, Subject: %v, Type: %v, Time: %v", event.Context.GetID(), event.Context.GetSource(), event.Context.GetSubject(), event.Context.GetType(), event.Context.GetTime())
 
-	log.Printf("event: %v", event)
+	unpackedEvent, err := helper.UnpackNestedCloudEvent(&event); if err != nil {
+		log.Printf("[Normaliser][CloudEvent][Handler] Error unpacking event: %s, ID: %v\n", err.Error(), event.Context.GetID())
+		return err
+	}
 
-	normalisedShipNotification, err := normaliseEvent(event); if err != nil {
+	normalisedShipNotification, err := normaliseEvent(*unpackedEvent); if err != nil {
 		log.Printf("[Normaliser][CloudEvent][Handler] Error normalising event: %s, ID: %v\n", err.Error(), event.Context.GetID())
 		return err
 	}
