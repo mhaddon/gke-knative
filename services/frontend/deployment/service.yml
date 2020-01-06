@@ -1,0 +1,17 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: frontend
+spec:
+    spec:
+      containers:
+        - image: eu.gcr.io/mhaddon/frontend:v1
+          ports:
+          - containerPort: 80
+          resources:
+            limits:
+              cpu: "100m"
+              memory: 256Mi
+            requests:
+              cpu: "50m"
+              memory: 64Mi
