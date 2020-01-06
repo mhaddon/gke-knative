@@ -5,11 +5,7 @@ import (
 	cloudevents "github.com/cloudevents/sdk-go"
 )
 
-type NestedCloudEventT struct {
-	CloudEventsVersion string `json:"cloudEventsVersion"`
-}
-
-type NestedCloudEvent struct {
+type nestedCloudEvent struct {
 	CloudEventsVersion string `json:"cloudEventsVersion"`
 	ContentType string `json:"contentType"`
 	Data interface{} `json:"data"`
@@ -21,7 +17,7 @@ type NestedCloudEvent struct {
 }
 
 func UnpackNestedCloudEvent(event *cloudevents.Event) (*cloudevents.Event, error) {
-	nestedCloudEvent := &NestedCloudEvent{}
+	nestedCloudEvent := &nestedCloudEvent{}
 
 	if err := event.DataAs(nestedCloudEvent); err != nil {
 		return event, nil
