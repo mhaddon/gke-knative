@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/mhaddon/gke-knative/services/common/src/helper"
+	"github.com/rs/cors"
 	"log"
 	"net/http"
-	"github.com/rs/cors"
 )
 
 func CreateHTTPListener() error {

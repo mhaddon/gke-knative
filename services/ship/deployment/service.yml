@@ -11,7 +11,7 @@ spec:
         access-ship-db: "1"
     spec:
       containers:
-        - image: eu.gcr.io/mhaddon/ship:v9
+        - image: eu.gcr.io/mhaddon/ship:v10
           env:
            - name: MONGO_USERNAME
              valueFrom:
@@ -66,39 +66,3 @@ spec:
             port:
               number: 80
           weight: 100
-
----
-
-#apiVersion: networking.istio.io/v1alpha3
-#kind: VirtualService
-#metadata:
-#  name: entry-route
-#  namespace: default
-#spec:
-#  gateways:
-#    - knative-ingress-gateway.knative-serving.svc.cluster.local
-#  hosts:
-#    - example.com
-#  http:
-#    - match:
-#        - uri:
-#            prefix: "/search"
-#      rewrite:
-#        authority: search-service.default.example.com
-#      route:
-#        - destination:
-#            host: istio-ingressgateway.istio-system.svc.cluster.local
-#            port:
-#              number: 80
-#          weight: 100
-#    - match:
-#        - uri:
-#            prefix: "/login"
-#      rewrite:
-#        authority: login-service.default.example.com
-#      route:
-#        - destination:
-#            host: istio-ingressgateway.istio-system.svc.cluster.local
-#            port:
-#              number: 80
-#          weight: 100
