@@ -24,6 +24,7 @@ type mongoConfig struct {
 
 type httpConfig struct {
 	Port int `env:"HTTP_PORT" json:"port"`
+	Origin string `env:"CORS_ORIGIN" json:"origin"`
 }
 
 var (

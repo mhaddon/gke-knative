@@ -2,9 +2,9 @@ package ship
 
 import (
 	"fmt"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/mhaddon/gke-knative/services/common/src/helper"
-	"github.com/rs/cors"
 	"log"
 	"net/http"
 )
@@ -13,17 +13,14 @@ func CreateHTTPListener() error {
 	config := getConfig()
 
 	log.Printf("[Ship][HTTP] Listening for http requests on port: %v...", config.HTTP.Port)
-	return http.ListenAndServe(fmt.Sprintf(":%v", config.HTTP.Port), enableCors(createRouter()))
-}
 
-func enableCors(router *mux.Router) http.Handler {
-	c := cors.New(cors.Options{
-		AllowedOrigins: []string{"*"}, //todo change
-		AllowedMethods: []string{"GET", "POST", "PUT"},
-		Debug: true, // todo change for prod
-	})
+	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type"})
+	originsOk := handlers.AllowedOrigins([]string{config.HTTP.Origin})
+	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
 
-	return c.Handler(router)
+	handler := handlers.CORS(originsOk, headersOk, methodsOk)
+
+	return http.ListenAndServe(fmt.Sprintf(":%v", config.HTTP.Port), handler(createRouter()))
 }
 
 func createRouter() *mux.Router {
