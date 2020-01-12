@@ -9,7 +9,8 @@ go get \
  github.com/tkanos/gonfig \
  github.com/gorilla/mux \
  github.com/mhaddon/gke-knative/services/common/src/models \
- github.com/mhaddon/gke-knative/services/common/src/helper
+ github.com/mhaddon/gke-knative/services/common/src/helper \
+ github.com/rs/cors
 
 mkdir -p "${DIR}/bin/"
 

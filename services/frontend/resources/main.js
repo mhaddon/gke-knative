@@ -1,4 +1,4 @@
-const shipServiceDomain = `http://shipservice`;
+const shipServiceDomain = `http://ship.tiw.io`;
 
 function requestNotifications(callback) {
     fetch(`${shipServiceDomain}/notifications`)

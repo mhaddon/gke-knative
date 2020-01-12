@@ -6,13 +6,24 @@ import (
 	"github.com/mhaddon/gke-knative/services/common/src/helper"
 	"log"
 	"net/http"
+	"github.com/rs/cors"
 )
 
 func CreateHTTPListener() error {
 	config := getConfig()
 
 	log.Printf("[Ship][HTTP] Listening for http requests on port: %v...", config.HTTP.Port)
-	return http.ListenAndServe(fmt.Sprintf(":%v", config.HTTP.Port), createRouter())
+	return http.ListenAndServe(fmt.Sprintf(":%v", config.HTTP.Port), enableCors(createRouter()))
+}
+
+func enableCors(router *mux.Router) http.Handler {
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"}, //todo change
+		AllowedMethods: []string{"GET", "POST", "PUT"},
+		Debug: true, // todo change for prod
+	})
+
+	return c.Handler(router)
 }
 
 func createRouter() *mux.Router {

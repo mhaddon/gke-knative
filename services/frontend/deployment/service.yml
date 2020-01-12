@@ -3,9 +3,13 @@ kind: Service
 metadata:
   name: frontend
 spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: "1"
     spec:
       containers:
-        - image: eu.gcr.io/mhaddon/frontend:v1
+        - image: eu.gcr.io/mhaddon/frontend:v8
           ports:
           - containerPort: 80
           resources:
@@ -15,3 +19,25 @@ spec:
             requests:
               cpu: "50m"
               memory: 64Mi
+
+---
+
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: frontend-entry-route
+spec:
+  gateways:
+    - knative-serving/cluster-local-gateway
+    - knative-serving/knative-ingress-gateway
+  hosts:
+    - tiw.io
+  http:
+    - rewrite:
+        authority: frontend.default.tiw.io
+      route:
+        - destination:
+            host: istio-ingressgateway.istio-system.svc.cluster.local
+            port:
+              number: 80
+          weight: 100
