@@ -2,28 +2,44 @@
 <html>
 <head>
     <title></title>
+    <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-auth.js"></script>
+    <script src="https://cdn.firebase.com/libs/firebaseui/4.2.0/firebaseui.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/4.2.0/firebaseui.css" />
     <link rel="stylesheet" href="main.css">
 </head>
 <body>
-<h2>Ship Notifications</h2>
+<header>
+    <h2>Ship Notifications</h2>
+    <div class="signedIn">
+        <span id="userEmail"></span>
+        <button id="signout">Logout</button>
+    </div>
+</header>
 
-<section id="notifications"></section>
+<div id="signedOut">
+    <div id="firebaseui-auth-container"></div>
+</div>
 
-<section>
-    <form id="form">
-        <p>
-            <span><label>ID <input type="text" name="id" id="id" /></label></span>
-            <span><label>Name <input type="text" name="name" id="name" /></label></span>
-            <span><label>Captain <input type="text" name="captain" id="captain" /></label></span>
-            <span><label>Lat <input type="text" name="lat" id="lat" /></label></span>
-            <span><label>Long <input type="text" name="long" id="long" /></label></span>
-            <span><label>Velocity <input type="text" name="velocity" id="velocity" /></label></span>
-            <input type="submit" value="Add" />
-        </p>
-    </form>
-    <p id="response"></p>
-</section>
+<div class="signedIn" style="flex-direction: column">
+    <section id="notifications"></section>
 
-<script type="text/javascript" src="main.js"></script>
+    <section>
+        <form id="form">
+            <p>
+                <span><label>ID <input type="text" name="id" id="id" /></label></span>
+                <span><label>Name <input type="text" name="name" id="name" /></label></span>
+                <span><label>Captain <input type="text" name="captain" id="captain" /></label></span>
+                <span><label>Lat <input type="text" name="lat" id="lat" /></label></span>
+                <span><label>Long <input type="text" name="long" id="long" /></label></span>
+                <span><label>Velocity <input type="text" name="velocity" id="velocity" /></label></span>
+                <input type="submit" value="Add" />
+            </p>
+        </form>
+        <p id="response"></p>
+    </section>
+</div>
+
+<script type="text/javascript" src="main.js" defer></script>
 </body>
 </html>

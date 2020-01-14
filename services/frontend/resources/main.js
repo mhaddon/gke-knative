@@ -1,4 +1,61 @@
 const shipServiceDomain = `http://ship.tiw.io`;
+firebase.initializeApp({
+    apiKey: "AIzaSyA0lTT1L2CqT9X0pnRRPCiq6nTEvuOxISc",
+    authDomain: "mhaddon.firebaseapp.com",
+});
+
+const uiConfig = {
+    credentialHelper: firebaseui.auth.CredentialHelper.NONE,
+    signInOptions: [
+        firebase.auth.EmailAuthProvider.PROVIDER_ID
+    ]
+};
+
+const ui = new firebaseui.auth.AuthUI(firebase.auth());
+
+function signedIn(user) {
+    console.log(user);
+
+
+    document.querySelectorAll('.signedIn').forEach((i) => i.style.display = 'flex');
+    document.getElementById('signedOut').style.display = 'none';
+    document.getElementById('userEmail').innerText = user.email;
+    user.getIdToken().then((token) => {
+        fetch('/api/secure.json', {
+            headers: {
+                Authorization: 'Bearer ' +  token
+            }
+        }).then(function(response) {
+            return response.json();
+        }).then(function(responseJson) {
+            document.getElementById('message').innerText = responseJson.message;
+        }).catch(function(error) {
+            console.error('Error: ', error);
+        });
+    });
+}
+
+function signedOut() {
+    document.querySelectorAll('.signedIn').forEach((i) => i.style.display = 'none');
+    document.getElementById('message').innerText = '';
+    document.getElementById('userEmail').innerText = '';
+    document.getElementById('signedOut').style.display = 'block';
+    ui.start('#firebaseui-auth-container', uiConfig);
+}
+
+window.addEventListener('load', function() {
+    document.getElementById('signout').onclick = function() {
+        firebase.auth().signOut();
+    };
+
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            signedIn(user);
+        } else {
+            signedOut();
+        }
+    });
+});
 
 function requestNotifications(callback) {
     fetch(`${shipServiceDomain}/notifications`)

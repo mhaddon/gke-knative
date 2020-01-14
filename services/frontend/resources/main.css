@@ -10,10 +10,16 @@ html {
     font-family: monospace;
 }
 
-h2 {
+header {
     padding: 12px 15px;
     color: #f9f9f9;
     background: #3c3c3c;
+    display: flex;
+}
+
+h2 {
+    margin: 0;
+    flex-grow: 100;
 }
 
 section {
@@ -39,7 +45,7 @@ span:last-child {
     border-right: 0;
 }
 
-input[type=submit] {
+input[type=submit], button {
     width: 100px;
     border: 0;
     cursor: pointer;
@@ -48,11 +54,30 @@ input[type=submit] {
     font-size: 1.5em;
 }
 
-input[type=submit]:hover {
+input[type=submit]:hover, button:hover {
     background: #585858;
+}
+
+button {
+    background: #f9f9f9;
+    color: #3c3c3c;
+}
+
+button:hover {
+    background: #969696;
 }
 
 #response {
     display: none;
     padding: 12px 15px;
+}
+
+#userEmail {
+    color: #f9f9f9;
+    flex-grow: 1;
+    margin: auto 12px auto auto;
+}
+
+.signedIn {
+    display: flex;
 }
