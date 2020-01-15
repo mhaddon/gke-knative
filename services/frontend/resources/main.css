@@ -81,3 +81,7 @@ button:hover {
 .signedIn {
     display: flex;
 }
+
+#signedOut {
+    margin: 15px;
+}
