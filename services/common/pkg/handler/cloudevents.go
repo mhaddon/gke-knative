@@ -5,7 +5,7 @@ import (
 	cloudevents "github.com/cloudevents/sdk-go"
 	"github.com/cloudevents/sdk-go/pkg/cloudevents/datacodec"
 	"github.com/cloudevents/sdk-go/pkg/cloudevents/datacodec/json"
-	"github.com/mhaddon/gke-knative/services/common/src/helper"
+	"github.com/mhaddon/gke-knative/services/common/pkg/helper"
 	"log"
 	"time"
 )

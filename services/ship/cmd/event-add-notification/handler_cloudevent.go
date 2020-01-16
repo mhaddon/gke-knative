@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	cloudevents "github.com/cloudevents/sdk-go"
-	"github.com/mhaddon/gke-knative/services/common/src/models"
+	"github.com/mhaddon/gke-knative/services/common/pkg/models"
 	"log"
 )
 
