@@ -1,0 +1,15 @@
+apiVersion: eventing.knative.dev/v1alpha1
+kind: Trigger
+metadata:
+  name: normaliser-trigger
+spec:
+  broker: default
+  filter:
+    attributes:
+      type: com.google.cloud.pubsub.topic.publish
+      source: //pubsub.googleapis.com/projects/mhaddon/topics/ingress
+  subscriber:
+    ref:
+      apiVersion: serving.knative.dev/v1
+      kind: Service
+      name: normaliser-event-normaliser
