@@ -3,8 +3,8 @@ package main
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
-	"github.com/mhaddon/gke-knative/services/common/pkg/helper"
-	"github.com/mhaddon/gke-knative/services/common/pkg/models"
+	"github.com/mhaddon/gke-knative/pkg/helper"
+	"github.com/mhaddon/gke-knative/pkg/models"
 	"log"
 	"net/http"
 )

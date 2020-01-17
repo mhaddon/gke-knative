@@ -7,10 +7,10 @@ COPY ${PWD} /go/src/app
 
 RUN go get \
      github.com/caarlos0/env \
-     github.com/mhaddon/gke-knative/services/ship/pkg/ship/persistence \
+     github.com/mhaddon/gke-knative/pkg/ship/persistence \
      github.com/cloudevents/sdk-go \
-     github.com/mhaddon/gke-knative/services/common/src/models \
-     github.com/mhaddon/gke-knative/services/common/pkg/handler/cloudevents \
+     github.com/mhaddon/gke-knative/pkg/models \
+     github.com/mhaddon/gke-knative/pkg/handler/cloudevents \
  && mkdir -p "${DIR}/bin/" \
  && CGO_ENABLED=0 GOOS=linux go build -o "bin/ship-event-add-notification" "cmd/event-add-notification/main.go"
 

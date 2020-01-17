@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/caarlos0/env"
-	"github.com/mhaddon/gke-knative/services/ship/pkg/ship/persistence"
+	"github.com/mhaddon/gke-knative/pkg/ship/persistence"
 	"log"
 	"sync"
 )

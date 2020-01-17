@@ -4,14 +4,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/caarlos0/env"
-	"github.com/mhaddon/gke-knative/services/ship/pkg/ship/persistence"
+	"github.com/mhaddon/gke-knative/pkg/persistence"
 	"log"
 	"sync"
 )
 
 type configuration struct {
-	HttpPort   int `env:"PORT" envDefault:"8080" json:"http_port"`
-	HttpOrigin int `env:"CORS_ORIGIN" envDefault:"*" json:"http_origin"`
+	HttpPort   int    `env:"PORT" envDefault:"8080" json:"http_port"`
+	HttpOrigin string `env:"CORS_ORIGIN" envDefault:"*" json:"http_origin"`
 
 	MongoDomain     string `env:"MONGO_DOMAIN" envDefault:"localhost" json:"mongo_domain"`
 	MongoPort       int    `env:"MONGO_PORT" envDefault:"27017" json:"mongo_port"`

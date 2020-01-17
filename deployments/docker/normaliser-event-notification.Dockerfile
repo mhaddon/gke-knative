@@ -9,8 +9,8 @@ RUN go get \
      github.com/caarlos0/env \
      github.com/cloudevents/sdk-go \
      github.com/google/uuid \
-     github.com/mhaddon/gke-knative/services/common/pkg/models \
-     github.com/mhaddon/gke-knative/services/common/pkg/handler/cloudevents \
+     github.com/mhaddon/gke-knative/pkg/models \
+     github.com/mhaddon/gke-knative/pkg/handler/cloudevents \
      github.com/cloudevents/sdk-go/pkg/cloudevents \
      github.com/pkg/errors
  && mkdir -p "${DIR}/bin/" \
