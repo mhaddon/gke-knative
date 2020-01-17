@@ -78,6 +78,10 @@ function addTextItem(element, html) {
 }
 
 function updateNotifications() {
+    if (document.getElementById('signedOut').style.display !== 'none') {
+        return false;
+    }
+
     requestNotifications((notifications) => {
         const section = document.getElementById(`notifications`);
         section.innerHTML = "";

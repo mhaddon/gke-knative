@@ -15,29 +15,31 @@ func publishNormalisedMessage(shipNotification models.ShipNotification, response
 	newEvent.SetType(getConfig().EgressType)
 
 	jsonShipNotification, err := shipNotification.ConvertToJson(); if err != nil {
-		log.Printf("[Normaliser-Event-Normaliser][CloudEvent][publishNormalisedMessage] Error serialising response: %s\n", err.Error())
+		log.Printf("[Normaliser-Event-Notification][CloudEvent][publishNormalisedMessage] Error serialising response: %s\n", err.Error())
 		return err
 	}
 
 	if err := newEvent.SetData(jsonShipNotification); err != nil {
-		log.Printf("[Normaliser-Event-Normaliser][CloudEvent][publishNormalisedMessage] Error packaging response: %s\n", err.Error())
+		log.Printf("[Normaliser-Event-Notification][CloudEvent][publishNormalisedMessage] Error packaging response: %s\n", err.Error())
 		return err
 	}
 
 	newEvent.SetDataContentType(*cloudevents.StringOfApplicationJSON())
 	response.RespondWith(200, &newEvent)
 
+	log.Printf("[Normaliser-Event-Notification][CloudEvent][publishNormalisedMessage] Responded to event with id: %v, source: %v, type: %v", newEvent.ID(), newEvent.Source(), newEvent.Type())
+
 	return nil
 }
 
 func cloudWatchHandler(ctx context.Context, event cloudevents.Event, rawEvent cloudevents.Event, response *cloudevents.EventResponse) error {
 	normalisedShipNotification, err := normaliseEvent(event); if err != nil {
-		log.Printf("[Normaliser-Event-Normaliser][CloudEvent][Handler] Error normalising event: %s, ID: %v\n", err.Error(), event.Context.GetID())
+		log.Printf("[Normaliser-Event-Notification][CloudEvent][Handler] Error normalising event: %s, ID: %v\n", err.Error(), event.Context.GetID())
 		return err
 	}
 
 	if err := publishNormalisedMessage(*normalisedShipNotification, response); err != nil {
-		log.Printf("[Normaliser-Event-Normaliser][CloudEvent][Handler] Error Publishing Response: %s, ID: %v\n", err.Error(), event.Context.GetID())
+		log.Printf("[Normaliser-Event-Notification][CloudEvent][Handler] Error Publishing Response: %s, ID: %v\n", err.Error(), event.Context.GetID())
 		return err
 	}
 

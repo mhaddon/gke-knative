@@ -7,7 +7,12 @@ spec:
   template:
     spec:
       containers:
-        - image: eu.gcr.io/mhaddon/normaliser-event-notification:v2
+        - image: eu.gcr.io/mhaddon/normaliser-event-notification:v3
+          env:
+            - name: EGRESS_TYPE
+              value: "shipdata/normalised"
+            - name: EGRESS_SOURCE
+              value: "mhaddon/normaliser"
           ports:
             - containerPort: 8080
           resources:

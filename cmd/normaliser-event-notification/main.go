@@ -6,8 +6,8 @@ import (
 )
 
 func main() {
-	log.Print("[Normaliser-Event-Normaliser] Started.")
+	log.Print("[Normaliser-Event-Notification] Started.")
 
 	config := getConfig()
-	log.Fatalf("[Normaliser-Event-Normaliser][CloudEvent] %v", handler.CreateCloudWatchListener(config.HttpPort, cloudWatchHandler))
+	log.Fatalf("[Normaliser-Event-Notification][CloudEvent] %v", handler.CreateCloudWatchListener(config.HttpPort, cloudWatchHandler))
 }

@@ -10,7 +10,7 @@ spec:
         autoscaling.knative.dev/minScale: "1"
     spec:
       containers:
-        - image: eu.gcr.io/mhaddon/ship-request-frontend:v1
+        - image: eu.gcr.io/mhaddon/ship-request-frontend:v2
           ports:
           - containerPort: 80
           resources:
