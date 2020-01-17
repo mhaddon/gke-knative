@@ -10,19 +10,19 @@ RUN go get \
      github.com/cloudevents/sdk-go \
      github.com/google/uuid \
      github.com/mhaddon/gke-knative/pkg/models \
-     github.com/mhaddon/gke-knative/pkg/handler/cloudevents \
+     github.com/mhaddon/gke-knative/pkg/handler \
      github.com/cloudevents/sdk-go/pkg/cloudevents \
      github.com/pkg/errors \
  && mkdir -p "${DIR}/bin/" \
- && CGO_ENABLED=0 GOOS=linux go build -o "bin/normaliser-event-normaliser" cmd/normaliser-event-normaliser/*.go
+ && CGO_ENABLED=0 GOOS=linux go build -o "bin/normaliser-event-notification" cmd/normaliser-event-notification/*.go
 
 # RUNTIME STAGE
 FROM alpine:3 as runtime
 
 RUN apk add --no-cache ca-certificates
 
-COPY --from=build /go/src/app/bin/normaliser-event-normaliser /
+COPY --from=build /go/src/app/bin/normaliser-event-notification /
 
 USER nobody
 
-CMD ["/normaliser-event-normaliser"]
+CMD ["/normaliser-event-notification"]

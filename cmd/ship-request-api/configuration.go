@@ -25,7 +25,7 @@ var (
 	configInstance *configuration
 	configOnce     sync.Once
 
-	persistenceInstance *configuration
+	persistenceInstance *persistence.Mongo
 	persistenceOnce     sync.Once
 )
 

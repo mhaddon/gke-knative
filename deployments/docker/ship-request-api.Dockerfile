@@ -11,7 +11,7 @@ RUN go get \
      github.com/mhaddon/gke-knative/pkg/persistence \
      github.com/mhaddon/gke-knative/pkg/helper \
      github.com/mhaddon/gke-knative/pkg/models \
-     github.com/mhaddon/gke-knative/pkg/handler/http \
+     github.com/mhaddon/gke-knative/pkg/handler \
  && mkdir -p "${DIR}/bin/" \
  && CGO_ENABLED=0 GOOS=linux go build -o "bin/ship-request-api" cmd/ship-request-api/*.go
 
