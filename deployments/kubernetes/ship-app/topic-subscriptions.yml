@@ -1,0 +1,51 @@
+apiVersion: pubsub.cloud.google.com/v1alpha1
+kind: PullSubscription
+metadata:
+  name: notification-ingress
+  namespace: ship-app
+spec:
+  topic: notification-ingress
+  #  mode: PushCompatible
+  sink:
+    ref:
+      apiVersion: eventing.knative.dev/v1alpha1
+      kind: Broker
+      name: default
+
+---
+
+apiVersion: pubsub.cloud.google.com/v1alpha1
+kind: PullSubscription
+metadata:
+  name: notification-normalised
+  namespace: ship-app
+spec:
+  topic: notification-normalised
+  #  mode: PushCompatible
+  sink:
+    ref:
+      apiVersion: eventing.knative.dev/v1alpha1
+      kind: Broker
+      name: default
+
+---
+
+apiVersion: pubsub.cloud.google.com/v1alpha1
+kind: Topic
+metadata:
+  name: notification-ingress
+  namespace: ship-app
+spec:
+  topic: notification-ingress
+  propagationPolicy: CreateDelete
+
+---
+
+apiVersion: pubsub.cloud.google.com/v1alpha1
+kind: Topic
+metadata:
+  name: notification-normalised
+  namespace: ship-app
+spec:
+  topic: notification-normalised
+  propagationPolicy: CreateDelete

@@ -31,7 +31,7 @@ var (
 
 func (c *configuration) convertToJson() string {
 	b, err := json.Marshal(c); if err != nil {
-		log.Printf("[Ship-Event-Add-Notification][Config] Failed to stringify configuration: %v", err)
+		log.Printf("[Ship-Request-Api][Config] Failed to stringify configuration: %v", err)
 	}
 
 	return string(b)
@@ -39,11 +39,13 @@ func (c *configuration) convertToJson() string {
 
 func getConfig() *configuration {
 	configOnce.Do(func() {
-		if err := env.Parse(&configInstance); err != nil {
-			fmt.Printf("[Ship-Event-Add-Notification][Config] Failed to process environments: %v", err)
+		config := configuration{}
+		if err := env.Parse(&config); err != nil {
+			fmt.Printf("[Ship-Request-Api][Config] Failed to process environments: %v", err)
 		}
+		configInstance = &config
 
-		log.Printf("[Ship-Event-Add-Notification][Config] Loaded config with variables: %v", configInstance.convertToJson())
+		log.Printf("[Ship-Request-Api][Config] Loaded config with variables: %v", configInstance.convertToJson())
 	})
 	return configInstance
 }

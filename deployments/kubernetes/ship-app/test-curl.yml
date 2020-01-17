@@ -1,19 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: curl-deployment
+  name: test-curl
+  namespace: ship-app
 spec:
   selector:
     matchLabels:
-      app: curlpod
+      app: test-curl
   replicas: 1
   template:
     metadata:
       labels:
-        app: curlpod
+        app: test-curl
     spec:
       containers:
-        - name: curlpod
+        - name: test-curl
           command:
             - sh
             - -c

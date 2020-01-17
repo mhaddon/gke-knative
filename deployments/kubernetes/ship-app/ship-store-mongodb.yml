@@ -1,7 +1,8 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: ship-db-credentials
+  name: ship-store-mongodb-credentials
+  namespace: ship-app
 type: Opaque
 data:
   username: 'dXNlcm5hbWU=' #username
@@ -12,7 +13,8 @@ data:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: ship-db-data
+  name: ship-store-mongodb-data
+  namespace: ship-app
 spec:
   accessModes:
     - ReadWriteOnce
@@ -23,21 +25,22 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ship-db
+  name: ship-store-mongodb
+  namespace: ship-app
   labels:
-    component: ship-db
+    component: ship-store-mongodb
 spec:
   replicas: 1
   selector:
     matchLabels:
-      component: ship-db
+      component: ship-store-mongodb
   template:
     metadata:
       labels:
-        component: ship-db
+        component: ship-store-mongodb
     spec:
       containers:
-        - name: ship-db
+        - name: ship-store-mongodb
           image: mongo:4.0
           resources:
             limits:
@@ -54,12 +57,12 @@ spec:
             - name: MONGO_INITDB_ROOT_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: ship-db-credentials
+                  name: ship-store-mongodb-credentials
                   key: username
             - name: MONGO_INITDB_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: ship-db-credentials
+                  name: ship-store-mongodb-credentials
                   key: password
           volumeMounts:
             - mountPath: /data/db
@@ -84,12 +87,13 @@ spec:
       volumes:
         - name: persistent-volume
           persistentVolumeClaim:
-            claimName: ship-db-data
+            claimName: ship-store-mongodb-data
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: ship-db
+  name: ship-store-mongodb
+  namespace: ship-app
 spec:
   ports:
     - name: transport
@@ -97,19 +101,20 @@ spec:
       protocol: TCP
       targetPort: 27017
   selector:
-    component: ship-db
+    component: ship-store-mongodb
   type: ClusterIP
 ---
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
-  name: access-ship-db
+  name: access-ship-store-mongodb
+  namespace: ship-app
 spec:
   podSelector:
     matchLabels:
-      component: ship-db
+      component: ship-store-mongodb
   ingress:
     - from:
         - podSelector:
             matchLabels:
-              access-ship-db: "1"
+              access-ship-store-mongodb: "1"

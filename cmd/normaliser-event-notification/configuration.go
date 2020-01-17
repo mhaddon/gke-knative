@@ -29,9 +29,11 @@ func (c *configuration) convertToJson() string {
 
 func getConfig() *configuration {
 	configOnce.Do(func() {
-		if err := env.Parse(&configInstance); err != nil {
+		config := configuration{}
+		if err := env.Parse(&config); err != nil {
 			fmt.Printf("[Normaliser-Event-Normaliser][Config] Failed to process environments: %v", err)
 		}
+		configInstance = &config
 
 		log.Printf("[Normaliser-Event-Normaliser][Config] Loaded config with variables: %v", configInstance.convertToJson())
 	})
