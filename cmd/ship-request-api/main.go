@@ -1,7 +1,7 @@
 package main
 
 import (
-	handler "github.com/mhaddon/gke-knative/pkg/handler"
+	"github.com/mhaddon/gke-knative/pkg/handler"
 	"log"
 )
 

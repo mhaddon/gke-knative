@@ -55,5 +55,5 @@ func CreateCloudWatchListener(port int, handler func(ctx context.Context, unpack
 
 	log.Printf("[CloudEvent] Listening for cloud events on port: %v...", port)
 
-	return c.StartReceiver(context.Background(), handler)
+	return c.StartReceiver(context.Background(), unpackEvent(handler))
 }

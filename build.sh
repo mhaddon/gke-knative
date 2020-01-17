@@ -10,4 +10,4 @@ IFS="-"; read -ra CONTAINER_PATH <<< "${CONTAINER}"
 
 docker build -t "${DOMAIN}/${CONTAINER}:${VERSION}" -f "deployments/docker/${CONTAINER}.Dockerfile" .
 
-echo "Built Container: ${DOMAIN}/${CONTAINER}:${VERSION}"
+docker push "${DOMAIN}/${CONTAINER}:${VERSION}"

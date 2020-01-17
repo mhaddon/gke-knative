@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/caarlos0/env"
-	"github.com/mhaddon/gke-knative/pkg/ship/persistence"
+	"github.com/mhaddon/gke-knative/pkg/persistence"
 	"log"
 	"sync"
 )
@@ -24,7 +24,7 @@ var (
 	configInstance *configuration
 	configOnce     sync.Once
 
-	persistenceInstance *configuration
+	persistenceInstance *persistence.Mongo
 	persistenceOnce     sync.Once
 )
 
