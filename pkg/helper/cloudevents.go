@@ -1,8 +1,8 @@
 package helper
 
 import (
-	"log"
 	cloudevents "github.com/cloudevents/sdk-go"
+	"log"
 )
 
 type nestedCloudEvent struct {

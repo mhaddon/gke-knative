@@ -8,6 +8,6 @@ DOMAIN="eu.gcr.io/mhaddon"
 
 IFS="-"; read -ra CONTAINER_PATH <<< "${CONTAINER}"
 
-(cd "${DIR}/services/${CONTAINER_PATH[0]}" && docker build -t "${DOMAIN}/${CONTAINER}:${VERSION}" -f "deployments/docker/${CONTAINER}.Dockerfile" .)
+docker build -t "${DOMAIN}/${CONTAINER}:${VERSION}" -f "deployments/docker/${CONTAINER}.Dockerfile" .
 
 echo "Built Container: ${DOMAIN}/${CONTAINER}:${VERSION}"
