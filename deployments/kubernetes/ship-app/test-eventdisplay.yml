@@ -1,0 +1,30 @@
+apiVersion: serving.knative.dev/v1alpha1
+kind: Service
+metadata:
+  name: test-event-display
+  namespace: ship-app
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: "1"
+    spec:
+      containers:
+        - image: gcr.io/knative-releases/github.com/knative/eventing-sources/cmd/event_display
+---
+apiVersion: eventing.knative.dev/v1alpha1
+kind: Trigger
+metadata:
+  name: test-event-display
+  namespace: ship-app
+spec:
+  broker: default
+  filter:
+    sourceAndType:
+      type: ""
+      source: ""
+  subscriber:
+    ref:
+      apiVersion: serving.knative.dev/v1alpha1
+      kind: Service
+      name: test-event-display
