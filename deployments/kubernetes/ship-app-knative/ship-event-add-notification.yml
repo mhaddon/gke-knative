@@ -2,7 +2,7 @@ apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
   name: ship-event-add-notification
-  namespace: ship-app
+  namespace: ship-app-knative
   labels:
     access-ship-store-mongodb: "1"
 spec:
@@ -35,7 +35,7 @@ spec:
                   name: ship-store-mongodb-credentials
                   key: database
             - name: MONGO_DOMAIN
-              value: 'ship-store-mongodb.ship-app.svc.cluster.local'
+              value: 'ship-store-mongodb.ship-app-knative.svc.cluster.local'
             - name: MONGO_PORT
               value: '27017'
           resources:
@@ -50,7 +50,7 @@ apiVersion: eventing.knative.dev/v1alpha1
 kind: Trigger
 metadata:
   name: notification-normalised-ingress-trigger
-  namespace: ship-app
+  namespace: ship-app-knative
 spec:
   broker: default
   filter:

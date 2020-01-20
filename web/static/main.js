@@ -14,25 +14,13 @@ const uiConfig = {
 const ui = new firebaseui.auth.AuthUI(firebase.auth());
 
 function signedIn(user) {
-    console.log(user);
-
-
     document.querySelectorAll('.signedIn').forEach((i) => i.style.display = 'flex');
     document.getElementById('signedOut').style.display = 'none';
     document.getElementById('userEmail').innerText = user.email;
-    user.getIdToken().then((token) => {
-        fetch('/api/secure.json', {
-            headers: {
-                Authorization: 'Bearer ' +  token
-            }
-        }).then(function(response) {
-            return response.json();
-        }).then(function(responseJson) {
-            document.getElementById('message').innerText = responseJson.message;
-        }).catch(function(error) {
-            console.error('Error: ', error);
-        });
-    });
+
+
+
+    user.getIdToken().then((token) => window.token = token);
 }
 
 function signedOut() {
@@ -58,7 +46,12 @@ window.addEventListener('load', function() {
 });
 
 function requestNotifications(callback) {
-    fetch(`${shipServiceDomain}/notifications`)
+    fetch(`${shipServiceDomain}/notifications`, {
+        credentials: 'include',
+        headers: {
+            Authorization: 'Bearer ' +  window.token
+        }
+    })
         .then(res => res.json())
         .then(callback)
         .catch(err => {
@@ -129,6 +122,7 @@ function addNotification(e) {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
+            Authorization: 'Bearer ' +  window.token
         },
         body: JSON.stringify(notification),
     })

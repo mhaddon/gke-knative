@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: test-curl
-  namespace: ship-app
+  namespace: ship-app-knative
 spec:
   selector:
     matchLabels:

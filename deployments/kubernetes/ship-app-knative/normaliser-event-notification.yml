@@ -2,7 +2,7 @@ apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
   name: normaliser-event-notification
-  namespace: ship-app
+  namespace: ship-app-knative
 spec:
   template:
     spec:
@@ -27,7 +27,7 @@ apiVersion: eventing.knative.dev/v1alpha1
 kind: Trigger
 metadata:
   name: notification-normalised-egress-trigger
-  namespace: ship-app
+  namespace: ship-app-knative
 spec:
   broker: default
   filter:
@@ -44,7 +44,7 @@ apiVersion: eventing.knative.dev/v1alpha1
 kind: Trigger
 metadata:
   name: notification-ingress-trigger
-  namespace: ship-app
+  namespace: ship-app-knative
 spec:
   broker: default
   filter:

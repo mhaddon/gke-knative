@@ -2,7 +2,8 @@ apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
   name: ship-request-frontend
-  namespace: ship-app
+  namespace: ship-app-knative
+  istio-injection: enabled
 spec:
   template:
     metadata:
@@ -27,7 +28,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   name: ship-request-frontend-entry-route
-  namespace: ship-app
+  namespace: ship-app-knative
 spec:
   gateways:
     - knative-serving/cluster-local-gateway
@@ -36,7 +37,7 @@ spec:
     - tiw.io
   http:
     - rewrite:
-        authority: ship-request-frontend.ship-app.tiw.io
+        authority: ship-request-frontend.ship-app-knative.tiw.io
       route:
         - destination:
             host: istio-ingressgateway.istio-system.svc.cluster.local

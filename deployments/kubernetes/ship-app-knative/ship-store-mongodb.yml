@@ -1,0 +1,120 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ship-store-mongodb-credentials
+  namespace: ship-app-knative-knative
+type: Opaque
+data:
+  username: 'dXNlcm5hbWU=' #username
+  password: 'cGFzc3dvcmQ=' #password
+  database: 'c2hpcA==' #ship
+  collection: 'bm90aWZpY2F0aW9ucw==' #notifications
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ship-store-mongodb-data
+  namespace: ship-app-knative
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ship-store-mongodb
+  namespace: ship-app-knative
+  labels:
+    component: ship-store-mongodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: ship-store-mongodb
+  template:
+    metadata:
+      labels:
+        component: ship-store-mongodb
+    spec:
+      containers:
+        - name: ship-store-mongodb
+          image: mongo:4.0
+          resources:
+            limits:
+              cpu: "150m"
+              memory: 512Mi
+            requests:
+              cpu: "50m"
+              memory: 128Mi
+          ports:
+            - containerPort: 27017
+              name: transport
+              protocol: TCP
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: ship-store-mongodb-credentials
+                  key: username
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ship-store-mongodb-credentials
+                  key: password
+          volumeMounts:
+            - mountPath: /data/db
+              name: persistent-volume
+              subPath: mongo/data
+          livenessProbe:
+            exec:
+              command:
+                - /bin/bash
+                - -c
+                - /bin/echo "$(test="$(/usr/bin/mongo --authenticationDatabase admin --username "$MONGO_INITDB_ROOT_USERNAME" --password "$MONGO_INITDB_ROOT_PASSWORD" localhost:27017/test --quiet <<< 'db.runCommand("ping").ok')"; ((test ^= 1)); /bin/echo "${test}")"
+            initialDelaySeconds: 15
+            periodSeconds: 15
+          readinessProbe:
+            exec:
+              command:
+                - /bin/bash
+                - -c
+                - /bin/echo "$(test="$(/usr/bin/mongo --authenticationDatabase admin --username "$MONGO_INITDB_ROOT_USERNAME" --password "$MONGO_INITDB_ROOT_PASSWORD" localhost:27017/test --quiet <<< 'db.runCommand("ping").ok')"; ((test ^= 1)); /bin/echo "${test}")"
+            initialDelaySeconds: 5
+            periodSeconds: 5
+      volumes:
+        - name: persistent-volume
+          persistentVolumeClaim:
+            claimName: ship-store-mongodb-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ship-store-mongodb
+  namespace: ship-app-knative
+spec:
+  ports:
+    - name: transport
+      port: 27017
+      protocol: TCP
+      targetPort: 27017
+  selector:
+    component: ship-store-mongodb
+  type: ClusterIP
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: access-ship-store-mongodb
+  namespace: ship-app-knative
+spec:
+  podSelector:
+    matchLabels:
+      component: ship-store-mongodb
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              access-ship-store-mongodb: "1"

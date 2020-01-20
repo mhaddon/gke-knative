@@ -1,0 +1,107 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: normaliser-event-notification
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: normaliser-event-notification
+  namespace: ship-app-kafka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: normaliser-event-notification
+  template:
+    metadata:
+      labels:
+        component: normaliser-event-notification
+    spec:
+      volumes:
+        - name: google-cloud-key
+          secret:
+            secretName: google-cloud-key
+      serviceAccountName: normaliser-event-notification
+      containers:
+        - name: normaliser
+          image: eu.gcr.io/mhaddon/normaliser-event-notification:v3
+          resources:
+            limits:
+              cpu: "100m"
+              memory: 256Mi
+            requests:
+              cpu: "50m"
+              memory: 64Mi
+          ports:
+            - containerPort: 8080
+        - name: connector
+          image: eu.gcr.io/mhaddon/pubsub-connector-sidecar:v4
+          resources:
+            limits:
+              cpu: "100m"
+              memory: 256Mi
+            requests:
+              cpu: "50m"
+              memory: 64Mi
+          volumeMounts:
+            - name: google-cloud-key
+              mountPath: /var/secrets/google
+          env:
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /var/secrets/google/key.json
+            - name: TARGET_URL
+              value: http://localhost:8080/
+            - name: SUBSCRIPTION_ID
+              value: notification-ingress
+            - name: INGRESS_TOPIC_NAME
+              value: notification-ingress
+            - name: EGRESS_TOPIC_NAME
+              value: notification-normalised
+            - name: PROJECT_ID
+              value: mhaddon
+
+---
+
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: normaliser-event-notification
+  namespace: ship-app-kafka
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: normaliser-event-notification
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 50
+    - type: Pods
+      pods:
+        metric:
+          name: packets-per-second
+        target:
+          type: AverageValue
+          averageValue: 1k
+
+#---
+#
+#apiVersion: networking.k8s.io/v1
+#kind: NetworkPolicy
+#metadata:
+#  name: default-deny
+#spec:
+#  podSelector:
+#    matchLabels:
+#      component: normaliser-event-notification
+#  policyTypes:
+#    - Ingress
+#    - Egress

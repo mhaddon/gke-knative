@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-curl
+  namespace: ship-app-kafka
+spec:
+  selector:
+    matchLabels:
+      app: test-curl
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: test-curl
+    spec:
+      containers:
+        - name: test-curl
+          command:
+            - sh
+            - -c
+            - while true; do sleep 1; done
+          image: radial/busyboxplus:curl

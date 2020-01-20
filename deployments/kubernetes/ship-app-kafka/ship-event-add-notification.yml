@@ -1,0 +1,121 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ship-event-add-notification
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ship-event-add-notification
+  namespace: ship-app-kafka
+  labels:
+    access-ship-store-mongodb: "1"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: ship-event-add-notification
+  template:
+    metadata:
+      labels:
+        component: ship-event-add-notification
+        access-ship-store-mongodb: "1"
+    spec:
+      volumes:
+        - name: google-cloud-key
+          secret:
+            secretName: google-cloud-key
+      serviceAccountName: ship-event-add-notification
+      containers:
+        - name: normaliser
+          image: eu.gcr.io/mhaddon/ship-event-add-notification:v2
+          env:
+            - name: MONGO_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: ship-store-mongodb-credentials
+                  key: username
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ship-store-mongodb-credentials
+                  key: password
+            - name: MONGO_COLLECTION
+              valueFrom:
+                secretKeyRef:
+                  name: ship-store-mongodb-credentials
+                  key: collection
+            - name: MONGO_DB
+              valueFrom:
+                secretKeyRef:
+                  name: ship-store-mongodb-credentials
+                  key: database
+            - name: MONGO_DOMAIN
+              value: 'ship-store-mongodb.ship-app-kafka.svc.cluster.local'
+            - name: MONGO_PORT
+              value: '27017'
+          resources:
+            limits:
+              cpu: "100m"
+              memory: 256Mi
+            requests:
+              cpu: "50m"
+              memory: 64Mi
+          ports:
+            - containerPort: 8080
+        - name: connector
+          image: eu.gcr.io/mhaddon/pubsub-connector-sidecar:v4
+          resources:
+            limits:
+              cpu: "100m"
+              memory: 256Mi
+            requests:
+              cpu: "50m"
+              memory: 64Mi
+          volumeMounts:
+            - name: google-cloud-key
+              mountPath: /var/secrets/google
+          env:
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /var/secrets/google/key.json
+            - name: TARGET_URL
+              value: http://localhost:8080/
+            - name: SUBSCRIPTION_ID
+              value: notification-normalised
+            - name: INGRESS_TOPIC_NAME
+              value: notification-normalised
+            - name: EGRESS_TOPIC_NAME
+              value: none
+            - name: PROJECT_ID
+              value: mhaddon
+
+---
+
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ship-event-add-notification
+  namespace: ship-app-kafka
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ship-event-add-notification
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 50
+    - type: Pods
+      pods:
+        metric:
+          name: packets-per-second
+        target:
+          type: AverageValue
+          averageValue: 1k
