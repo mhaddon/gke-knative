@@ -10,6 +10,8 @@ kind: Deployment
 metadata:
   name: ship-request-frontend
   namespace: ship-app-kafka
+  annotations:
+    "sidecar.jaegertracing.io/inject": "true"
 spec:
   replicas: 1
   selector:
@@ -23,7 +25,7 @@ spec:
       serviceAccountName: ship-request-frontend
       containers:
         - name: ship-request-frontend
-          image: eu.gcr.io/mhaddon/ship-request-frontend:v5
+          image: eu.gcr.io/mhaddon/ship-request-frontend:v9
           resources:
             limits:
               cpu: "100m"

@@ -10,6 +10,8 @@ kind: Deployment
 metadata:
   name: ship-event-add-notification
   namespace: ship-app-kafka
+  annotations:
+    "sidecar.jaegertracing.io/inject": "true"
   labels:
     access-ship-store-mongodb: "1"
 spec:
