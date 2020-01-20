@@ -15,7 +15,7 @@ func CreateHTTPListener(port int, origin string, router *mux.Router) error {
 	originsOk := handlers.AllowedOrigins([]string{origin})
 	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
 
-	handler := handlers.CORS(originsOk, headersOk, methodsOk)
+	handler := handlers.CORS(originsOk, headersOk, methodsOk, handlers.AllowCredentials())
 
 	return http.ListenAndServe(fmt.Sprintf(":%v", port), handler(router))
 }

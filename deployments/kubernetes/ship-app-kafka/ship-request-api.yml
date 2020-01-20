@@ -132,10 +132,13 @@ spec:
           allowMethods:
             - PUT
             - GET
+            - OPTIONS
           allowCredentials: true
           allowHeaders:
+            - Access-Control-Request-Method
             - X-Requested-With
             - Content-Type
+            - authorization
           maxAge: "24h"
 
 ---

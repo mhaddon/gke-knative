@@ -23,7 +23,7 @@ spec:
       serviceAccountName: ship-request-frontend
       containers:
         - name: ship-request-frontend
-          image: eu.gcr.io/mhaddon/ship-request-frontend:v3
+          image: eu.gcr.io/mhaddon/ship-request-frontend:v5
           resources:
             limits:
               cpu: "100m"

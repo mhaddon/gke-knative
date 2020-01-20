@@ -18,8 +18,6 @@ function signedIn(user) {
     document.getElementById('signedOut').style.display = 'none';
     document.getElementById('userEmail').innerText = user.email;
 
-
-
     user.getIdToken().then((token) => window.token = token);
 }
 
@@ -47,7 +45,6 @@ window.addEventListener('load', function() {
 
 function requestNotifications(callback) {
     fetch(`${shipServiceDomain}/notifications`, {
-        credentials: 'include',
         headers: {
             Authorization: 'Bearer ' +  window.token
         }
