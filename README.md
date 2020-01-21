@@ -85,8 +85,10 @@ You will probably need to label your namespace like:
 ## Requirements
 
 - Istio
+    - `istioctl manifest apply --set values.kiali.enabled=true --set values.tracing.ingress.enabled=true --set telemetry.enabled=true --set values.tracing.enabled=true  --set values.global.tracer.zipkin.address=jaeger-collector.istio-system:9411`
 - Kubernetes
 - Knative?
 - Jaeger - Kiali?
+    - https://www.jaegertracing.io/docs/1.13/operator/
 - GCP Config Connector?
 
